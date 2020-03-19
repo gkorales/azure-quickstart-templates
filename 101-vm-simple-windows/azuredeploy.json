@@ -22,15 +22,11 @@
     },
     "windowsOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "rs5-pron",
       "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-        "2016-Nano-Server",
-        "2016-Datacenter-with-Containers",
-        "2016-Datacenter",
-        "2019-Datacenter"
+        "rs5-pro",
+        "rs5-enterprisen",
+        "rs5-evd-o365pp"
       ],
       "metadata": {
         "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
@@ -38,7 +34,7 @@
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A2_v2",
+      "defaultValue": "Standard_B2s",
       "metadata": {
         "description": "Size of the virtual machine."
       }
@@ -54,14 +50,14 @@
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
     "nicName": "myVMNic",
-    "addressPrefix": "10.0.0.0/16",
+    "addressPrefix": "10.0.10.0/16",
     "subnetName": "Subnet",
-    "subnetPrefix": "10.0.0.0/24",
-    "publicIPAddressName": "myPublicIP",
-    "vmName": "SimpleWinVM",
-    "virtualNetworkName": "MyVNET",
+    "subnetPrefix": "10.0.10.0/24",
+    "publicIPAddressName": "templatesIP",
+    "vmName": "SimpleWin10VM",
+    "virtualNetworkName": "templatesVNET",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
-    "networkSecurityGroupName": "default-NSG"
+    "networkSecurityGroupName": "templates-NSG"
   },
   "resources": [
     {
@@ -81,7 +77,7 @@
       "name": "[variables('publicIPAddressName')]",
       "location": "[parameters('location')]",
       "properties": {
-        "publicIPAllocationMethod": "Dynamic",
+        "publicIPAllocationMethod": "Static",
         "dnsSettings": {
           "domainNameLabel": "[parameters('dnsLabelPrefix')]"
         }
@@ -99,7 +95,7 @@
             "name":  "default-allow-3389",
             "properties": {
               "priority":  1000,
-              "access":  "Allow",
+              "access":  "Deny",
               "direction":  "Inbound",
               "destinationPortRange":  "3389",
               "protocol":  "Tcp",
